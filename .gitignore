@@ -1,0 +1,7 @@
+node_modules/
+neo
+neo-*
+*.tgz
+coverage/
+.env
+.DS_Store
