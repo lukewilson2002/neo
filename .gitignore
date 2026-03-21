@@ -5,3 +5,4 @@ neo-*
 coverage/
 .env
 .DS_Store
+neobase-spec.md
