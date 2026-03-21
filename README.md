@@ -15,8 +15,13 @@ npm run dev       # Develop with isolated infrastructure
 
 ## Install
 
+Download a prebuilt binary from [GitHub Releases](https://github.com/lukewilson2002/neo/releases), or build from source:
+
 ```bash
-bun install -g neobase
+git clone https://github.com/lukewilson2002/neo.git
+cd neo
+bun install
+bun run build    # Compiles to ./neo binary
 ```
 
 **Prerequisite**: [Docker](https://docs.docker.com/get-docker/) must be installed and running.

@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install
+
+      - name: Build all targets
+        run: |
+          bun build --compile --target=bun-linux-x64 src/index.ts --outfile neo-linux-x64
+          bun build --compile --target=bun-linux-arm64 src/index.ts --outfile neo-linux-arm64
+          bun build --compile --target=bun-darwin-x64 src/index.ts --outfile neo-darwin-x64
+          bun build --compile --target=bun-darwin-arm64 src/index.ts --outfile neo-darwin-arm64
+          bun build --compile --target=bun-windows-x64 src/index.ts --outfile neo-windows-x64.exe
+          bun build --compile --target=bun-windows-arm64 src/index.ts --outfile neo-windows-arm64.exe
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            neo-linux-x64
+            neo-linux-arm64
+            neo-darwin-x64
+            neo-darwin-arm64
+            neo-windows-x64.exe
+            neo-windows-arm64.exe
