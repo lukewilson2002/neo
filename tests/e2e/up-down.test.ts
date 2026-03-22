@@ -38,3 +38,35 @@ describe("neo up + neo down", () => {
     expect(result.stdout).toContain("Stopped")
   })
 })
+
+describe("neo down <name>", () => {
+  const ctx = TestContext.create()
+  const repo = TestRepo.create("feature-down-by-name")
+
+  afterAll(async () => {
+    await ctx.cleanup()
+    await repo.cleanup()
+  })
+
+  it("stops an environment by explicit name", async () => {
+    // Start environment
+    const up = await runNeo(["up"], { cwd: repo.dir, env: { ...ctx.env } })
+    expect(up.exitCode).toBe(0)
+
+    // Verify it's listed
+    const list = await runNeo(["list"], { cwd: repo.dir, env: { ...ctx.env } })
+    expect(list.stdout).toContain("feature-down-by-name")
+
+    // Stop by explicit name (not relying on current branch detection)
+    const down = await runNeo(["down", "feature-down-by-name"], {
+      cwd: repo.dir,
+      env: { ...ctx.env },
+    })
+    expect(down.exitCode).toBe(0)
+    expect(down.stdout).toContain("Stopped")
+
+    // Verify it's gone
+    const listAfter = await runNeo(["list"], { cwd: repo.dir, env: { ...ctx.env } })
+    expect(listAfter.stdout).toContain("No active environments")
+  }, 90_000)
+})

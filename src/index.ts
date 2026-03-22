@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 
 import { Command } from "commander"
+import pkg from "../package.json"
 import { initCommand } from "./commands/init"
 import { upCommand } from "./commands/up"
 import { downCommand } from "./commands/down"
@@ -14,7 +15,7 @@ const program = new Command()
 program
   .name("neo")
   .description("One command to get an isolated database for your branch")
-  .version("0.1.0")
+  .version(pkg.version)
 
 program.addCommand(initCommand)
 program.addCommand(upCommand)
