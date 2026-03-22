@@ -22,6 +22,14 @@ export interface ResolvedConfig {
   hooks: HookConfig
 }
 
+export interface CliFlags {
+  postgres?: string
+  redis?: string
+  noPostgres?: boolean
+  noRedis?: boolean
+  noS3?: boolean
+}
+
 export interface AllocatedPorts {
   postgres?: number
   redis?: number
