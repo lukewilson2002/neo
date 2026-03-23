@@ -5,11 +5,10 @@ import { getProjectId } from "../core/project"
 import { findFreePorts } from "../core/ports"
 import { buildComposeSpec, serializeCompose } from "../core/compose"
 import { isDockerAvailable, dockerComposeUp } from "../core/docker"
-import { waitForHealthy } from "../core/health"
 import { executeHook } from "../core/hooks"
 import { generateEnvVars } from "../core/env-vars"
 import { addEnvironment, readProjectState } from "../core/state"
-import { success, error, info } from "../ui/output"
+import { success, info } from "../ui/output"
 import { exitWithError } from "../ui/errors"
 import type { CliFlags, AllocatedPorts } from "../types"
 
@@ -46,29 +45,25 @@ export const upCommand = new Command("up")
 
     info(`Environment: ${envName}`)
 
-    // Determine how many ports we need
     const enabledServices: string[] = []
     let portCount = 0
     if (config.services.postgres.enabled) { enabledServices.push("postgres"); portCount++ }
     if (config.services.redis.enabled) { enabledServices.push("redis"); portCount++ }
-    if (config.services.s3.enabled) { enabledServices.push("s3"); portCount += 2 } // API + console
+    if (config.services.s3.enabled) { enabledServices.push("s3"); portCount += 2 }
 
     if (portCount === 0) {
       exitWithError("No services enabled.", "Enable at least one service.")
     }
 
-    // Check for existing environment
     const existingState = readProjectState(projectId)
     const existingEnv = existingState?.environments.find((e) => e.name === envName)
 
     let ports: AllocatedPorts
 
     if (existingEnv) {
-      // Idempotent: reuse existing ports
       ports = existingEnv.ports
       info("  Environment already exists, re-checking health...")
     } else {
-      // Allocate new ports
       const freePorts = await findFreePorts(portCount)
       let idx = 0
       ports = {}
@@ -80,30 +75,19 @@ export const upCommand = new Command("up")
       }
     }
 
-    // Build and start compose
     const spec = buildComposeSpec(config, ports)
     const yaml = serializeCompose(spec)
 
+    // --wait makes Docker Compose wait for health checks before returning
     const upResult = dockerComposeUp(yaml, composeProjectName)
     if (upResult.exitCode !== 0) {
-      error(`Failed to start services: ${upResult.stderr}`)
-      process.exit(1)
+      exitWithError(`Failed to start services: ${upResult.stderr}`)
     }
 
-    // Wait for healthy
-    try {
-      await waitForHealthy(composeProjectName)
-    } catch (err) {
-      error(err instanceof Error ? err.message : String(err))
-      process.exit(1)
-    }
-
-    // Print service status
     if (config.services.postgres.enabled) success(`Postgres (${config.services.postgres.version}) → localhost:${ports.postgres}`)
     if (config.services.redis.enabled) success(`Redis (${config.services.redis.version}) → localhost:${ports.redis}`)
     if (config.services.s3.enabled) success(`MinIO → localhost:${ports.s3} (console: ${ports.s3Console})`)
 
-    // Save state
     addEnvironment(projectId, {
       name: envName,
       ports,
@@ -112,7 +96,6 @@ export const upCommand = new Command("up")
       projectId,
     })
 
-    // Run hook
     const envVars = generateEnvVars(config, ports)
     if (config.hooks.up) {
       info("")
@@ -121,8 +104,7 @@ export const upCommand = new Command("up")
         executeHook(config.hooks.up, envVars)
         success("Hook completed.")
       } catch (err) {
-        error(err instanceof Error ? err.message : String(err))
-        process.exit(1)
+        exitWithError(err instanceof Error ? err.message : String(err))
       }
     }
   })

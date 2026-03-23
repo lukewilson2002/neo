@@ -2,8 +2,7 @@ import { Command } from "commander"
 import { getCurrentBranch, sanitizeBranch } from "../core/branch"
 import { getProjectId } from "../core/project"
 import { readProjectState } from "../core/state"
-import { generateEnvVars, formatEnvVars } from "../core/env-vars"
-import { resolveConfig } from "../core/config"
+import { envVarsFromPorts, formatEnvVars } from "../core/env-vars"
 import { exitWithError } from "../ui/errors"
 
 export const envCommand = new Command("env")
@@ -23,13 +22,6 @@ export const envCommand = new Command("env")
       )
     }
 
-    // Reconstruct config from stored services to generate env vars
-    const config = resolveConfig(null, {})
-    // Only include services that were started
-    config.services.postgres.enabled = env.services.includes("postgres")
-    config.services.redis.enabled = env.services.includes("redis")
-    config.services.s3.enabled = env.services.includes("s3")
-
-    const vars = generateEnvVars(config, env.ports)
+    const vars = envVarsFromPorts(env.ports)
     console.log(formatEnvVars(vars))
   })

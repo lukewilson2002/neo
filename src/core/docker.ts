@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process"
-import { writeFileSync, unlinkSync, mkdirSync } from "node:fs"
+import { writeFileSync, unlinkSync } from "node:fs"
 import { join } from "node:path"
 import { tmpdir } from "node:os"
 import { randomBytes } from "node:crypto"

@@ -2,7 +2,6 @@ import {
   readFileSync,
   writeFileSync,
   mkdirSync,
-  existsSync,
   renameSync,
 } from "node:fs"
 import { join } from "node:path"
@@ -20,9 +19,15 @@ function getStatePath(projectId: string): string {
 
 export function readProjectState(projectId: string): ProjectState | null {
   const path = getStatePath(projectId)
-  if (!existsSync(path)) return null
-  const content = readFileSync(path, "utf-8")
-  return JSON.parse(content) as ProjectState
+  try {
+    const content = readFileSync(path, "utf-8")
+    return JSON.parse(content) as ProjectState
+  } catch (err: unknown) {
+    if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
+      return null
+    }
+    throw err
+  }
 }
 
 export function writeProjectState(

@@ -1,11 +1,15 @@
 import { spawnSync } from "node:child_process"
 
-export function sanitizeBranch(branch: string): string {
-  return branch
+export function slugify(input: string): string {
+  return input
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
+}
+
+export function sanitizeBranch(branch: string): string {
+  return slugify(branch)
 }
 
 export function getCurrentBranch(cwd?: string): string {

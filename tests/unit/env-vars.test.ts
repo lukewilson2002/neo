@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test"
-import { generateEnvVars } from "../../src/core/env-vars"
+import { generateEnvVars, formatEnvVars } from "../../src/core/env-vars"
 import type { ResolvedConfig, AllocatedPorts } from "../../src/types"
 
 describe("generateEnvVars", () => {
@@ -64,6 +64,3 @@ describe("generateEnvVars", () => {
     )
   })
 })
-
-// Import after describing tests to ensure the test file is self-documenting
-import { formatEnvVars } from "../../src/core/env-vars"

@@ -1,14 +1,8 @@
 import { spawnSync } from "node:child_process"
 
-export function isDockerAvailable(): boolean {
-  const result = spawnSync("docker", ["info"], {
-    stdio: "pipe",
-  })
-  return result.status === 0
-}
+export { isDockerAvailable } from "../../src/core/docker"
 
 export function cleanupOrphans(): void {
-  // Remove containers with neo-test- prefix
   const ps = spawnSync("docker", ["ps", "-a", "--filter", "name=neo-test-", "--format", "{{.ID}}"], {
     stdio: "pipe",
   })
@@ -17,7 +11,6 @@ export function cleanupOrphans(): void {
     spawnSync("docker", ["rm", "-f", ...containerIds], { stdio: "pipe" })
   }
 
-  // Remove volumes with neo-test- prefix
   const vs = spawnSync("docker", ["volume", "ls", "--filter", "name=neo-test-", "--format", "{{.Name}}"], {
     stdio: "pipe",
   })

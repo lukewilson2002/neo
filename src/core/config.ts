@@ -1,5 +1,5 @@
 import { parse as parseTOML } from "smol-toml"
-import { readFileSync, existsSync } from "node:fs"
+import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { DEFAULT_POSTGRES_VERSION, DEFAULT_REDIS_VERSION } from "../constants"
 import type { NeoConfig, ResolvedConfig, CliFlags } from "../types"
@@ -74,7 +74,13 @@ export function resolveConfig(
 
 export function loadConfig(cwd: string): NeoConfig | null {
   const configPath = join(cwd, "neo.toml")
-  if (!existsSync(configPath)) return null
-  const content = readFileSync(configPath, "utf-8")
-  return parseConfig(content)
+  try {
+    const content = readFileSync(configPath, "utf-8")
+    return parseConfig(content)
+  } catch (err: unknown) {
+    if (err && typeof err === "object" && "code" in err && err.code === "ENOENT") {
+      return null
+    }
+    throw err
+  }
 }
