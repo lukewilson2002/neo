@@ -1,4 +1,4 @@
-# neobase
+# neo
 
 One command to get an isolated database for your branch.
 
