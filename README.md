@@ -7,10 +7,11 @@ Neo gives every git branch its own isolated Postgres, Redis, and S3-compatible s
 ## Quick Start
 
 ```bash
-neo init          # Create neo.toml with latest stable versions
-neo up            # Start Postgres, Redis, MinIO for your branch
-neo env > .env    # Export connection strings
-npm run dev       # Develop with isolated infrastructure
+neo init           # Create neo.toml with latest stable versions
+neo up             # Start Postgres, Redis, MinIO for your branch
+neo env -w .env    # Export connection strings
+npm run dev        # Develop with isolated infrastructure
+neo down           # Kill everything when done (--all for all environments)
 ```
 
 ## Install
