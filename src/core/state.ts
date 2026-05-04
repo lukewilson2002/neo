@@ -10,7 +10,7 @@ import { STATE_DIR_ENV_VAR } from "../constants"
 import type { ProjectState, EnvironmentState } from "../types"
 
 export function getStateDir(): string {
-  return process.env[STATE_DIR_ENV_VAR] || join(homedir(), ".neobase")
+  return process.env[STATE_DIR_ENV_VAR] || join(homedir(), ".neo")
 }
 
 function getStatePath(projectId: string): string {

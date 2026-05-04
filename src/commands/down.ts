@@ -1,7 +1,11 @@
 import { Command } from "commander"
 import { getCurrentBranch, sanitizeBranch } from "../core/branch"
 import { getProjectId } from "../core/project"
-import { readProjectState, removeEnvironment, writeProjectState } from "../core/state"
+import {
+  readProjectState,
+  removeEnvironment,
+  writeProjectState,
+} from "../core/state"
 import { dockerComposeDown } from "../core/docker"
 import { success, info } from "../ui/output"
 import { exitWithError } from "../ui/errors"
@@ -39,7 +43,7 @@ export const downCommand = new Command("down")
     if (!env) {
       exitWithError(
         `No active environment "${envName}".`,
-        "Run 'neo list' to see active environments."
+        "Run 'neo list' to see active environments.",
       )
     }
 

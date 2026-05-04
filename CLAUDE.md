@@ -1,12 +1,12 @@
-# CLAUDE.md — Neobase Development Guide
+# CLAUDE.md — neo Development Guide
 
 ## Project Overview
 
-Neobase (`neo`) is a CLI tool that gives every git branch its own isolated
+`neo` is a CLI tool that gives every git branch its own isolated
 Postgres, Redis, and S3 (MinIO) via Docker. Built with Bun + TypeScript,
 compiled to a single binary.
 
-**Package**: `neobase` | **CLI command**: `neo` | **Runtime**: Bun
+**Package**: `neo` | **CLI command**: `neo` | **Runtime**: Bun
 
 ## Commands
 
@@ -37,7 +37,7 @@ tests/
 
 ## Key Patterns
 
-- **State directory**: Resolved in `src/core/state.ts` via `process.env.NEO_STATE_DIR || ~/.neobase`.
+- **State directory**: Resolved in `src/core/state.ts` via `process.env.NEO_STATE_DIR || ~/.neo`.
   All modules use this single resolution point.
 - **Test isolation**: `TestContext` (tests/helpers/test-context.ts) creates a unique temp state dir
   and Docker project prefix per test run. Safe for parallel worktrees.
@@ -64,7 +64,6 @@ tests/
 
 ## Important Files
 
-- `neobase-spec.md` — Full feature specification
 - `src/core/state.ts` — State directory resolution (NEO_STATE_DIR)
 - `tests/helpers/test-context.ts` — Test isolation primitive
 - `src/constants.ts` — Port range, default versions, timeouts

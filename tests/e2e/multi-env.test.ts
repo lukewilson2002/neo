@@ -41,8 +41,8 @@ describe("multiple environments coexist", () => {
     expect(envA.exitCode).toBe(0)
     expect(envB.exitCode).toBe(0)
 
-    const portA = envA.stdout.match(/localhost:(\d+)\/neobase/)?.[1]
-    const portB = envB.stdout.match(/localhost:(\d+)\/neobase/)?.[1]
+    const portA = envA.stdout.match(/localhost:(\d+)\/neo/)?.[1]
+    const portB = envB.stdout.match(/localhost:(\d+)\/neo/)?.[1]
     expect(portA).toBeDefined()
     expect(portB).toBeDefined()
     expect(portA).not.toBe(portB)

@@ -1,4 +1,4 @@
-# neobase
+# neo
 
 One command to get an isolated database for your branch.
 
@@ -15,7 +15,13 @@ npm run dev       # Develop with isolated infrastructure
 
 ## Install
 
-Download a prebuilt binary from [GitHub Releases](https://github.com/lukewilson2002/neo/releases), or build from source:
+```bash
+curl -fsSL https://raw.githubusercontent.com/lukewilson2002/neo/main/install.sh | sh
+```
+
+Installs to `~/.local/bin` by default. Override with `NEO_INSTALL_DIR=/usr/local/bin` or pin a release with `NEO_VERSION=v0.2.0`.
+
+Or download a prebuilt binary directly from [GitHub Releases](https://github.com/lukewilson2002/neo/releases), or build from source:
 
 ```bash
 git clone https://github.com/lukewilson2002/neo.git
@@ -25,6 +31,10 @@ bun run build    # Compiles to ./neo binary
 ```
 
 **Prerequisite**: [Docker](https://docs.docker.com/get-docker/) must be installed and running.
+
+### Updates
+
+Neo checks for new releases in the background (at most once per day) and prints a one-line notice on the next command when an update is available. To disable, set `NEO_NO_UPDATE_CHECK=1`.
 
 ## Commands
 
@@ -66,7 +76,7 @@ Disable a service with `--no-postgres`, `--no-redis`, or `--no-s3`, or set it to
 
 | Variable | Format |
 |---|---|
-| `DATABASE_URL` | `postgresql://postgres:postgres@localhost:<port>/neobase` |
+| `DATABASE_URL` | `postgresql://postgres:postgres@localhost:<port>/neo` |
 | `REDIS_URL` | `redis://localhost:<port>` |
 | `S3_ENDPOINT` | `http://localhost:<port>` |
 | `S3_CONSOLE_URL` | `http://localhost:<port>` |

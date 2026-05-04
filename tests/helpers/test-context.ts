@@ -11,7 +11,10 @@ export class TestContext {
   private constructor(stateDir: string, projectId: string) {
     this.stateDir = stateDir
     this.projectId = projectId
-    this.env = { NEO_STATE_DIR: stateDir }
+    this.env = {
+      NEO_STATE_DIR: stateDir,
+      NEO_NO_UPDATE_CHECK: "1",
+    }
   }
 
   static create(): TestContext {
